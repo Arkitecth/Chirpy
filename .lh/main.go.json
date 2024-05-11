@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 25,
+            "activePatchIndex": 146,
             "patches": [
                 {
                     "date": 1714515786627,
@@ -108,6 +108,490 @@
                 {
                     "date": 1714517621836,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \n-\tmux := http.NewServeMux()\n+\tmux := middlewareCors( http.NewServeMux())\n \n \tsrv := &http.Server{\n \t\tAddr:    \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714600922339,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,13 +20,12 @@\n \n func main() {\n \tconst port = \"8080\"\n \n-\tmux := middlewareCors( http.NewServeMux())\n+\tmux := middlewareCors(http.NewServeMux())\n \n-\tsrv := &http.Server{\n-\t\tAddr:    \":\" + port,\n-\t\tHandler: mux,\n+\tsrv := http.Server {\n+\t\tAddr: \":\" + port,\n \t}\n \n \tlog.Printf(\"Serving on port: %s\\n\", port)\n \tlog.Fatal(srv.ListenAndServe())\n"
+                },
+                {
+                    "date": 1714601115560,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,9 @@\n \tmux := middlewareCors(http.NewServeMux())\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n+\t\tHandler: mux,\n \t}\n \n \tlog.Printf(\"Serving on port: %s\\n\", port)\n \tlog.Fatal(srv.ListenAndServe())\n"
+                },
+                {
+                    "date": 1714601129733,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \n-\tmux := middlewareCors(http.NewServeMux())\n+\tmux := middlewareCors(http.NewServeMux().)\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714601162106,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \n-\tmux := middlewareCors(http.NewServeMux().)\n+\tmux := http.NewServeMux())\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714601244274,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,10 +20,12 @@\n \n func main() {\n \tconst port = \"8080\"\n \n-\tmux := http.NewServeMux())\n+\tmux := http.NewServeMux()\n \n+\tmux.Handle(\"/\", http.FileServer())\n+\n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n \t}\n"
+                },
+                {
+                    "date": 1714601269965,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,9 +22,9 @@\n \tconst port = \"8080\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/\", http.FileServer())\n+\tmux.Handle(\"/\", http.FileServer(http.Dir(\".\")))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714601446198,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,9 @@\n }\n \n func main() {\n \tconst port = \"8080\"\n+\tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(\".\")))\n"
+                },
+                {
+                    "date": 1714601451588,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/\", http.FileServer(http.Dir(\".\")))\n+\tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714601487434,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,7 +30,7 @@\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n \t}\n \n-\tlog.Printf(\"Serving on port: %s\\n\", port)\n+\tlog.Printf(\"Serving files from %s on port: %s\\n\", port)\n \tlog.Fatal(srv.ListenAndServe())\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1714601498513,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,7 +30,7 @@\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n \t}\n \n-\tlog.Printf(\"Serving files from %s on port: %s\\n\", port)\n+\tlog.Printf(\"Serving files from %s on port: %s\\n\", filepathRoot, port)\n \tlog.Fatal(srv.ListenAndServe())\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1714602172935,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n+\tmux.Handle(\"/assets\")\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714602201993,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,9 +24,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n-\tmux.Handle(\"/assets\")\n+\tmux.Handle(\"/assets\", http.FileServer(http.Dir()))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714602221967,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n+\tconst assetsPath =\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n"
+                },
+                {
+                    "date": 1714602251566,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n-\tconst assetsPath =\n+\tconst assetsPath = filepathRoot + \"/assets\"\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n"
+                },
+                {
+                    "date": 1714602360212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n-\tmux.Handle(\"/assets\", http.FileServer(http.Dir()))\n+\tmux.Handle(\"/assets\", http.FileServer(http.Dir(assetsPath)))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714602565917,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,8 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n-\tmux.Handle(\"/assets\", http.FileServer(http.Dir(assetsPath)))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714602573216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,8 @@\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n-\tconst assetsPath = filepathRoot + \"/assets\"\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n"
+                },
+                {
+                    "date": 1714602820279,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n-\tmux := http.NewServeMux()\n+\tmux := middlewareCors( http.NewServeMux())\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n \n \tsrv := http.Server {\n"
+                },
+                {
+                    "date": 1714602838524,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n-\tmux := middlewareCors( http.NewServeMux())\n+\tmux := middlewareCors(http.NewServeMux())\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n \n \tsrv := http.Server {\n"
+                },
+                {
+                    "date": 1714602904485,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n-\tmux := middlewareCors(http.NewServeMux())\n+\tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n \n \tsrv := http.Server {\n"
+                },
+                {
+                    "date": 1714602932448,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/\", http.FileServer(http.Dir(filepathRoot)))\n+\tmux.Handle(\"/\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714603628815,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,10 @@\n \t\tnext.ServeHTTP(w, r)\n \t})\n }\n \n+\n+\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n"
+                },
+                {
+                    "date": 1714603653421,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,8 +18,9 @@\n \t})\n }\n \n \n+func customHandler(http.ResponseWriter)\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n"
+                },
+                {
+                    "date": 1714603662858,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \t})\n }\n \n \n-func customHandler(http.ResponseWriter)\n+func customHandler(w http.ResponseWriter, )\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n"
+                },
+                {
+                    "date": 1714603680724,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \t})\n }\n \n \n-func customHandler(w http.ResponseWriter, )\n+func customHandler(w http.ResponseWriter, r *http.Request)\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n"
+                },
+                {
+                    "date": 1714603685810,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,11 @@\n \t})\n }\n \n \n-func customHandler(w http.ResponseWriter, r *http.Request)\n+func customHandler(w http.ResponseWriter, r *http.Request) {\n+\t\n+}\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n"
+                },
+                {
+                    "date": 1714603778605,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n }\n \n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n-\t\n+\tw.Header().Add(\"Content-Type\", \"text/plain\")\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714603803411,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,9 @@\n \n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Add(\"Content-Type\", \"text/plain\")\n+\tw.WriteHeader(200)\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714603823123,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n }\n \n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n-\tw.Header().Add(\"Content-Type\", \"text/plain\")\n+\tw.Header().Add(\"Content-Type\", \" text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1714603869575,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,8 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Add(\"Content-Type\", \" text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n+\tw.Write(\"Ok\")\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714603887071,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Add(\"Content-Type\", \" text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write(\"Ok\")\n+\tw.Write([])\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714603963618,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,11 +19,11 @@\n }\n \n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n-\tw.Header().Add(\"Content-Type\", \" text/plain; charset=utf-8\")\n+\tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write([])\n+\tw.Write()\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604028578,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write()\n+\tw.Write(\"OK\")\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604050358,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write(\"OK\")\n+\tw.Write([]byte{\"OK\"})\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604262368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,11 +19,11 @@\n }\n \n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n-\tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write([]byte{\"OK\"})\n+\tw.Write()\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604280681,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write()\n+\tw.Write(r.Body)\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604561007,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write(r.Body)\n+\tw.Write(r.Body.Read(\"\"))\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604651237,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,9 @@\n \n func customHandler(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n-\tw.Write(r.Body.Read(\"\"))\n+\tw.Write([]byte(http.StatusText(200)))\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1714604708431,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \t})\n }\n \n \n-func customHandler(w http.ResponseWriter, r *http.Request) {\n+func app(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n \tw.Write([]byte(http.StatusText(200)))\n }\n"
+                },
+                {
+                    "date": 1714604721601,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,8 +31,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n+\tmux.HandleFunc()\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714604732561,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,8 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.Handle(\"/\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n-\tmux.HandleFunc()\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714604741295,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n+\tmux.Handle(\"/app\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714604894711,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \t})\n }\n \n \n-func app(w http.ResponseWriter, r *http.Request) {\n+func app(w http.ResponseWriter) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n \tw.Write([]byte(http.StatusText(200)))\n }\n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/app\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605202801,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/app/*\", middlewareCors(http.FileServer(http.Dir(filepathRoot))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\" http.FileServer(http.Dir(filepathRoot))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605232009,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\" http.FileServer(http.Dir(filepathRoot))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605314203,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n+\tmux.HandleFunc(\"/healthz\", app())\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605344964,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n \t})\n }\n \n \n-func app(w http.ResponseWriter) {\n+func app(w http.ResponseWriter, r *http.Request) {\n \tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \tw.WriteHeader(200)\n \tw.Write([]byte(http.StatusText(200)))\n }\n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", app())\n+\tmux.HandleFunc(\"/healthz\",)\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605453399,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\",)\n+\tmux.HandleFunc(\"/healthz\", middlewareCors(app()))\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605525140,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", middlewareCors(app()))\n+\tmux.HandleFunc(\"/healthz\", )\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605544880,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,21 +18,21 @@\n \t})\n }\n \n \n-func app(w http.ResponseWriter, r *http.Request) {\n-\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n-\tw.WriteHeader(200)\n-\tw.Write([]byte(http.StatusText(200)))\n-}\n \n+\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", )\n+\tmux.HandleFunc(\"/healthz\", func app(w http.ResponseWriter, r *http.Request) {\n+\t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\t\tw.WriteHeader(200)\n+\t\tw.Write([]byte(http.StatusText(200)))\n+\t})\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605550271,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,9 +26,9 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", func app(w http.ResponseWriter, r *http.Request) {\n+\tmux.HandleFunc(\"/healthz\", func (w http.ResponseWriter, r *http.Request) {\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n"
+                },
+                {
+                    "date": 1714605558418,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,13 +26,14 @@\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", func (w http.ResponseWriter, r *http.Request) {\n+\tmux.HandleFunc(\"/healthz\", func(w http.ResponseWriter, r *http.Request) {\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n+\t\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605570411,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,8 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\t\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714605636583,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605642839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605694475,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605706097,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(200)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605897539,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", func(w http.ResponseWriter, r *http.Request) {\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n-\t\tw.WriteHeader(200)\n+\t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n \tmux.Handle(\"/app\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n"
+                },
+                {
+                    "date": 1714605969014,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714605986317,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714606004204,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app/*\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1714606108234,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", func(w http.ResponseWriter, r *http.Request) {\n-\t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\t\tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n"
+                },
+                {
+                    "date": 1714606170215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", func(w http.ResponseWriter, r *http.Request) {\n-\t\tw.Header().Add(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n \t\tw.WriteHeader(http.StatusOK)\n \t\tw.Write([]byte(http.StatusText(200)))\n \t})\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n"
+                },
+                {
+                    "date": 1714606296719,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,21 +18,21 @@\n \t})\n }\n \n \n+func handlerReadiness(w http.ResponseWriter, r *http.Request) {\n+\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\tw.WriteHeader(http.StatusOK)\n+\tw.Write([]byte(http.StatusText(200)))\n+}\n \n-\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", func(w http.ResponseWriter, r *http.Request) {\n-\t\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n-\t\tw.WriteHeader(http.StatusOK)\n-\t\tw.Write([]byte(http.StatusText(200)))\n-\t})\n+\tmux.HandleFunc(\"/healthz\", )\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714606409106,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,10 +29,11 @@\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n+\thttp.ServeMux()\n \n-\tmux.HandleFunc(\"/healthz\", )\n+\tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1714606417934,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,8 @@\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n \tmux := http.NewServeMux()\n-\thttp.ServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n"
+                },
+                {
+                    "date": 1715034688942,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,12 @@\n \tw.WriteHeader(http.StatusOK)\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n+type apiConfig struct {\n+\t\n+}\n+\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n"
+                },
+                {
+                    "date": 1715034718522,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n type apiConfig struct {\n-\t\n+\tfileSeverHits int\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715034746201,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,8 +28,12 @@\n type apiConfig struct {\n \tfileSeverHits int\n }\n \n+func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) {\n+\t\n+}\n+\n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n \n"
+                },
+                {
+                    "date": 1715034765200,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,9 @@\n \tfileSeverHits int\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) {\n-\t\n+\tcfg.fileSeverHits += 1 \n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715034849593,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,9 +28,9 @@\n type apiConfig struct {\n \tfileSeverHits int\n }\n \n-func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) {\n+func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1715034887365,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n+\treturn next\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715034948944,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\", middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", apiConfig.fileSeverHits(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715034962748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\", apiConfig.fileSeverHits(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", apiConfig.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715034989980,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,8 +36,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n+\tapiCfg := apiConfig{}\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n"
+                },
+                {
+                    "date": 1715034998050,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\", apiConfig.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715035030634,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\",  middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715035041095,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\",  middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715035048575,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot)))))\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715035201056,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,12 @@\n \tw.WriteHeader(http.StatusOK)\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n+func handlerHits(w http.ResponseWriter, r * http.Request) {\n+\tw.Write([]byte(\"Hits\"))\n+}\n+\n type apiConfig struct {\n \tfileSeverHits int\n }\n \n"
+                },
+                {
+                    "date": 1715035216532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func handlerHits(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits\"))\n+\tw.Write([]byte(\"Hits :\"))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035236295,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func handlerHits(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits :\"))\n+\tw.Write([]byte(\"Hits :\", r))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035302536,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,10 +24,10 @@\n \tw.WriteHeader(http.StatusOK)\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n-func handlerHits(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits :\", r))\n+func (cfg *apiConfig) (w http.ResponseWriter, r * http.Request) {\n+\tw.Write([]byte(\"Hits :\", ))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035333184,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,10 +24,10 @@\n \tw.WriteHeader(http.StatusOK)\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n-func (cfg *apiConfig) (w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits :\", ))\n+func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n+\tw.Write([]byte(\"Hits :\", cfg.fileSeverHits))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035342354,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits :\", cfg.fileSeverHits))\n+\tw.Write([]byte(\"Hits : %v\", cfg.fileSeverHits))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035388241,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits : %v\", cfg.fileSeverHits))\n+\tw.Write([]byte(cfg.fileSeverHits))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035398415,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(cfg.fileSeverHits))\n+\tw.Write([]byte(\"string\"))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035409552,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"string\"))\n+\tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035424938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits\"))\n+\tw.Write([]byte(\"Hits %s\", cfg.fileSeverHits))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035432862,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tw.Write([]byte(\"Hits %s\", cfg.fileSeverHits))\n+\tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035503657,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,8 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n+\tr.Body.Close()\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035534451,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,8 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tr.Body.Close()\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035634252,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,8 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n+\tmessage := cfg.fileSeverHits\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035640765,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tmessage := cfg.fileSeverHits\n+\tmessage := \"Hits :\", cfg.fileSeverHits\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035647686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tmessage := \"Hits :\", cfg.fileSeverHits\n+\tmessage := \"Hits : %s\", cfg.fileSeverHits\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035657963,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tmessage := \"Hits : %s\", cfg.fileSeverHits\n+\tmessage := \"Hits :\", cfg.fileSeverHits\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035736854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n \n import (\n \t\"log\"\n \t\"net/http\"\n+\t\"strconv\"\n )\n \n func middlewareCors(next http.Handler) http.Handler {\n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n@@ -25,9 +26,9 @@\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n-\tmessage := \"Hits :\", cfg.fileSeverHits\n+\tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n \tw.Write([]byte(\"Hits\"))\n }\n \n type apiConfig struct {\n"
+                },
+                {
+                    "date": 1715035742393,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,9 @@\n }\n \n func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n \tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n-\tw.Write([]byte(\"Hits\"))\n+\tw.Write([]byte(message))\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035756782,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,9 +25,9 @@\n \tw.WriteHeader(http.StatusOK)\n \tw.Write([]byte(http.StatusText(200)))\n }\n \n-func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r * http.Request) {\n+func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {\n \tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n \tw.Write([]byte(message))\n }\n \n"
+                },
+                {
+                    "date": 1715035826787,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -47,8 +47,9 @@\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n+\tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n \tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1715035923052,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,10 @@\n \tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n \tw.Write([]byte(message))\n }\n \n+func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request)\n+\n type apiConfig struct {\n \tfileSeverHits int\n }\n \n@@ -48,8 +50,9 @@\n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n+\n \tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n"
+                },
+                {
+                    "date": 1715035949199,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,11 @@\n \tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n \tw.Write([]byte(message))\n }\n \n-func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request)\n+func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {\n+\t\n+}\n \n type apiConfig struct {\n \tfileSeverHits int\n }\n"
+                },
+                {
+                    "date": 1715035960178,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,9 +31,9 @@\n \tw.Write([]byte(message))\n }\n \n func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {\n-\t\n+\tcfg.fileSeverHits = 0\n }\n \n type apiConfig struct {\n \tfileSeverHits int\n"
+                },
+                {
+                    "date": 1715035980632,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,8 +52,9 @@\n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n+\tmux.HandleFunc(\"/reset\", apiCfg.handlerMetrics)\n \n \tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n"
+                },
+                {
+                    "date": 1715036102590,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -52,9 +52,9 @@\n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n-\tmux.HandleFunc(\"/reset\", apiCfg.handlerMetrics)\n+\tmux.HandleFunc(\"/reset\", apiCfg.handlerReset)\n \n \tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n"
+                },
+                {
+                    "date": 1715036188865,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,9 +54,9 @@\n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n \tmux.HandleFunc(\"/reset\", apiCfg.handlerReset)\n \n-\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715036213297,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -54,9 +54,9 @@\n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n \tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n \tmux.HandleFunc(\"/reset\", apiCfg.handlerReset)\n \n-\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n \n \tsrv := http.Server {\n \t\tAddr: \":\" + port,\n \t\tHandler: mux,\n"
+                },
+                {
+                    "date": 1715036239197,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -46,9 +46,9 @@\n \n func main() {\n \tconst port = \"8080\"\n \tconst filepathRoot = \".\"\n-\tapiCfg := apiConfig{}\n+\tapiCfg := apiConfig{fileSeverHits: 0}\n \n \tmux := http.NewServeMux()\n \n \tmux.HandleFunc(\"/healthz\", handlerReadiness)\n"
+                },
+                {
+                    "date": 1715036271975,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,67 @@\n+package main\n+\n+import (\n+\t\"log\"\n+\t\"net/http\"\n+\t\"strconv\"\n+)\n+\n+func middlewareCors(next http.Handler) http.Handler {\n+\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n+\t\tw.Header().Set(\"Access-Control-Allow-Origin\", \"*\")\n+\t\tw.Header().Set(\"Access-Control-Allow-Methods\", \"GET, POST, OPTIONS, PUT, DELETE\")\n+\t\tw.Header().Set(\"Access-Control-Allow-Headers\", \"*\")\n+\t\tif r.Method == \"OPTIONS\" {\n+\t\t\tw.WriteHeader(http.StatusOK)\n+\t\t\treturn\n+\t\t}\n+\t\tnext.ServeHTTP(w, r)\n+\t})\n+}\n+\n+\n+func handlerReadiness(w http.ResponseWriter, r *http.Request) {\n+\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n+\tw.WriteHeader(http.StatusOK)\n+\tw.Write([]byte(http.StatusText(200)))\n+}\n+\n+func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {\n+\tmessage := \"Hits: \" + strconv.Itoa(cfg.fileSeverHits)\n+\tw.Write([]byte(message))\n+}\n+\n+func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {\n+\tcfg.fileSeverHits = 0\n+}\n+\n+type apiConfig struct {\n+\tfileSeverHits int\n+}\n+\n+func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n+\tcfg.fileSeverHits += 1 \n+\treturn next\n+}\n+\n+func main() {\n+\tconst port = \"8080\"\n+\tconst filepathRoot = \".\"\n+\tapiCfg := apiConfig{fileSeverHits: 0}\n+\n+\tmux := http.NewServeMux()\n+\n+\tmux.HandleFunc(\"/healthz\", handlerReadiness)\n+\tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n+\tmux.HandleFunc(\"/reset\", apiCfg.handlerReset)\n+\n+\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n+\n+\tsrv := http.Server {\n+\t\tAddr: \":\" + port,\n+\t\tHandler: mux,\n+\t}\n+\n+\tlog.Printf(\"Serving files from %s on port: %s\\n\", filepathRoot, port)\n+\tlog.Fatal(srv.ListenAndServe())\n+}\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1715036325212,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\treturn next\n+\tnext.ServeHTTP(w)\n }\n \n func main() {\n \tconst port = \"8080\"\n@@ -63,72 +63,5 @@\n \t}\n \n \tlog.Printf(\"Serving files from %s on port: %s\\n\", filepathRoot, port)\n \tlog.Fatal(srv.ListenAndServe())\n-}\n-package main\n-\n-import (\n-\t\"log\"\n-\t\"net/http\"\n-\t\"strconv\"\n-)\n-\n-func middlewareCors(next http.Handler) http.Handler {\n-\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n-\t\tw.Header().Set(\"Access-Control-Allow-Origin\", \"*\")\n-\t\tw.Header().Set(\"Access-Control-Allow-Methods\", \"GET, POST, OPTIONS, PUT, DELETE\")\n-\t\tw.Header().Set(\"Access-Control-Allow-Headers\", \"*\")\n-\t\tif r.Method == \"OPTIONS\" {\n-\t\t\tw.WriteHeader(http.StatusOK)\n-\t\t\treturn\n-\t\t}\n-\t\tnext.ServeHTTP(w, r)\n-\t})\n-}\n-\n-\n-func handlerReadiness(w http.ResponseWriter, r *http.Request) {\n-\tw.Header().Set(\"Content-Type\", \"text/plain; charset=utf-8\")\n-\tw.WriteHeader(http.StatusOK)\n-\tw.Write([]byte(http.StatusText(200)))\n-}\n-\n-func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {\n-\tmessage := \"Hits :\" + strconv.Itoa(cfg.fileSeverHits)\n-\tw.Write([]byte(message))\n-}\n-\n-func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {\n-\tcfg.fileSeverHits = 0\n-}\n-\n-type apiConfig struct {\n-\tfileSeverHits int\n-}\n-\n-func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n-\tcfg.fileSeverHits += 1 \n-\treturn next\n-}\n-\n-func main() {\n-\tconst port = \"8080\"\n-\tconst filepathRoot = \".\"\n-\tapiCfg := apiConfig{fileSeverHits: 0}\n-\n-\tmux := http.NewServeMux()\n-\n-\tmux.HandleFunc(\"/healthz\", handlerReadiness)\n-\tmux.HandleFunc(\"/metrics\", apiCfg.handlerMetrics)\n-\tmux.HandleFunc(\"/reset\", apiCfg.handlerReset)\n-\n-\tmux.Handle(\"/app/*\", apiCfg.middleWareMetricsInc(middlewareCors(http.StripPrefix(\"/app\", http.FileServer(http.Dir(filepathRoot))))))\n-\n-\tsrv := http.Server {\n-\t\tAddr: \":\" + port,\n-\t\tHandler: mux,\n-\t}\n-\n-\tlog.Printf(\"Serving files from %s on port: %s\\n\", filepathRoot, port)\n-\tlog.Fatal(srv.ListenAndServe())\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1715036342401,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\tnext.ServeHTTP(w)\n+\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715036457236,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\n+\treturn cfg.handlerMetrics()\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715036512938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,10 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\treturn cfg.handlerMetrics()\n+\treturn http.HandlerFunc(func(w writer))\n+\treturn cfg.handlerMetrics(w)\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715036527544,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\treturn http.HandlerFunc(func(w writer))\n+\treturn http.HandlerFunc(func(w http.ResponseWriter))\n \treturn cfg.handlerMetrics(w)\n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1715036537343,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,9 +40,9 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\treturn http.HandlerFunc(func(w http.ResponseWriter))\n+\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request))\n \treturn cfg.handlerMetrics(w)\n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1715036564791,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,10 +40,12 @@\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n-\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request))\n-\treturn cfg.handlerMetrics(w)\n+\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n+\t\treturn next.ServeHTTP(w, r)\n+\t})\n+\n }\n \n func main() {\n \tconst port = \"8080\"\n"
+                },
+                {
+                    "date": 1715036610382,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n-\t\treturn next.ServeHTTP(w, r)\n+\t\treturn\n \t})\n \n }\n \n"
+                },
+                {
+                    "date": 1715036623520,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,10 +41,11 @@\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n-\t\treturn\n+\t\n \t})\n+\treturn\n \n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1715036636071,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -41,9 +41,9 @@\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n \tcfg.fileSeverHits += 1 \n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n-\t\n+\t\tnext.ServeHTTP(w, r)\n \t})\n \treturn\n \n }\n"
+                },
+                {
+                    "date": 1715036645296,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,9 +43,8 @@\n \tcfg.fileSeverHits += 1 \n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n \t\tnext.ServeHTTP(w, r)\n \t})\n-\treturn\n \n }\n \n func main() {\n"
+                },
+                {
+                    "date": 1715036691715,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -39,10 +39,11 @@\n \tfileSeverHits int\n }\n \n func (cfg *apiConfig) middleWareMetricsInc(next http.Handler) http.Handler{\n-\tcfg.fileSeverHits += 1 \n+\t\n \treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n+\t\tcfg.fileSeverHits += 1 \n \t\tnext.ServeHTTP(w, r)\n \t})\n \n }\n"
                 }
             ],
             "date": 1714515786627,
